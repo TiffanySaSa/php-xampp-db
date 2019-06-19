@@ -26,8 +26,6 @@ class Config_db {
         $link =  self::init();
         $query = mysqli_query($link, $sql);
         if($query) {
-            $data = json_encode($query, true);
-            if($data) 
             return $query;
         }else{
             echo "Error:".$sql."<br>".mysqli_error($link);
@@ -35,6 +33,21 @@ class Config_db {
         }
         mysqli_close($link);
     }
+
+    public function writeDB($sql) {
+        $link =  self::init();
+        $query = mysqli_query($link, $sql);
+        if($query) {
+            return mysqli_insert_id($link);
+            // return $query;
+        }else{
+            echo "Error:".$sql."<br>".mysqli_error($link);
+            return false;
+        }
+        mysqli_close($link);
+    }
+
+
 }
 
 

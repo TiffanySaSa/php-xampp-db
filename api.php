@@ -21,6 +21,15 @@ switch($cmd) {
     case "getPet":
         $res = GetData::getPet($params);
         break;
+    case "addMember":
+        $res = GetData::addMember($params);
+        break;
+    case "deleteMember":
+        $res = GetData::deleteMember($params);
+        break;
+    case "addPets":
+        $res = GetData::addPets($params);
+        break;
     default:
         $res = array(
             "status" => 999,
