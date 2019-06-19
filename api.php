@@ -18,6 +18,9 @@ switch($cmd) {
     case "getMember":
         $res = GetData::getMember();
         break;
+    case "getPet":
+        $res = GetData::getPet($params);
+        break;
     default:
         $res = array(
             "status" => 999,

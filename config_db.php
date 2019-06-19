@@ -26,6 +26,8 @@ class Config_db {
         $link =  self::init();
         $query = mysqli_query($link, $sql);
         if($query) {
+            $data = json_encode($query, true);
+            if($data) 
             return $query;
         }else{
             echo "Error:".$sql."<br>".mysqli_error($link);
