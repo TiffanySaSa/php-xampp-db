@@ -16,13 +16,16 @@ if(isset($data["params"])) $params = $data["params"];
 
 switch($cmd) {
     case "getMember":
-        $res = GetData::getMember();
+        $res = GetData::getMember($params);
         break;
     case "getPet":
         $res = GetData::getPet($params);
         break;
     case "addMember":
         $res = GetData::addMember($params);
+        break;
+    case "editMember":
+        $res = GetData::editMember($params);
         break;
     case "deleteMember":
         $res = GetData::deleteMember($params);

@@ -9,7 +9,7 @@ class Config_db {
         $servername = 'localhost';
         $username = 'root';
         $password = '';
-        $dbname = 'test';
+        $dbname = 'rabbit';
         
         $link = mysqli_connect($servername, $username, $password);
         mysqli_set_charset($link, "utf8");
