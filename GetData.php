@@ -8,7 +8,8 @@ class GetData {
     public function getMember($params) {
         $index = $params["index"];
         $size = $params["size"];
-        $res = self::sql_get_member($index, $size);
+        $status = ($params["status"]!== "all") ? $params["status"] : false;
+        $res = self::sql_get_member(($index*$size) +1, $size, $status);
         $count = self::sql_count_member();
 
         if($res===false) return self::setResult(-1, "", "ERR_CONNECT");
@@ -53,9 +54,9 @@ class GetData {
         $name = $params["name"];
         $sex = $params["sex"];
         
-        $id = self::sql_edit_member($id, $name, $sex, $weight);
+        $result = self::sql_edit_member($id, $name, $sex, $weight);
 
-        if($id>0)  return self::setResult(0, array("id" => $id));
+        if($result== true)  return self::setResult(0, array("id" => $id));
     }
 
     public function addPets($params) {
@@ -69,20 +70,30 @@ class GetData {
         if($id>0)  return self::setResult(0, array("id" => $id));
     }
 
+    // 啟/停用
+    public function enabledStatus($params) {
+        $id = $params["id"];
+        $enabled = $params["enabled"];
+        
+        $result = self::sql_enabled_member($id, $enabled);
+        
+        if($result== true)  return self::setResult(0, array("id" => $id));
+    }
+
     public function deleteMember($params) {
         $id = $params["id"];
 
         self::sql_delete_member($id);
         // self::sql_delete_pets($id);
 
-        return self::setResult(0, );
+        return self::setResult(0, '');
     }
 
     private function sql_add_pets($name, $year, $sex, $host) {
         $sql = "insert into pets (`name`, `year`, `sex`, `host`) ";
         $sql.= "values ( '$name' , '$year', '$sex', '$host' )";
 
-        $res = Config_db::writeDB($sql);
+        $res = Config_db::writeDB($sql, "insert");
         if($res == false) return $res;
         
         return $res;
@@ -93,6 +104,17 @@ class GetData {
         $sql.= "name='$name' ";
         $sql.= ",sex='$sex' ";
         $sql.= ",weight=$weight ";
+        $sql.= " where id=$id";
+
+        $res = Config_db::writeDB($sql);
+        if($res == false) return $res;
+        
+        return $res;
+    }
+
+    private function sql_enabled_member($id, $enabled) {
+        $sql = "update rabbits set ";
+        $sql.= "active='$enabled' ";
         $sql.= " where id=$id";
 
         $res = Config_db::writeDB($sql);
@@ -125,17 +147,18 @@ class GetData {
         $sql = "insert into rabbits (`name`, `sex`, `weight`) ";
         $sql.= "values ('$name', '$sex', '$weight' )";
 
-        $res = Config_db::writeDB($sql);
+        $res = Config_db::writeDB($sql, "insert");
         if($res == false) return $res;
         
         return $res;
     }
 
-    private function sql_get_member($index, $size) {
+    private function sql_get_member($index, $size, $status = false) {
         $sql = "select * ";
         $sql.= "from rabbits ";
+        if($status!= false) $sql.= "where active = '".$status."' ";
         $sql.= "limit $index, $size";
-        
+        // echo $sql."<br>";
         $res = Config_db::connectDB($sql);
 
         if($res == false) return $res;

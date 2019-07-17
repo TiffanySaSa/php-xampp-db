@@ -33,6 +33,9 @@ switch($cmd) {
     case "addPets":
         $res = GetData::addPets($params);
         break;
+    case "enabledStatus":
+        $res = GetData::enabledStatus($params);
+        break;
     default:
         $res = array(
             "status" => 999,

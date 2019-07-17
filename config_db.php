@@ -34,12 +34,15 @@ class Config_db {
         mysqli_close($link);
     }
 
-    public function writeDB($sql) {
+    public function writeDB($sql, $type=null) {
         $link =  self::init();
         $query = mysqli_query($link, $sql);
         if($query) {
-            return mysqli_insert_id($link);
-            // return $query;
+            if($type == "insert") {
+                return mysqli_insert_id($link);
+            }else{
+                return $query;
+            }
         }else{
             echo "Error:".$sql."<br>".mysqli_error($link);
             return false;
